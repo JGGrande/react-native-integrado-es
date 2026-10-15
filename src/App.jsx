@@ -32,7 +32,8 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Minhas Tarefas</h1>
+      <h1>Minhas Tarefa
+      </h1>
       <p>Comece adicionando sua primeira tarefa</p>
 
       <button onClick={addTarefa}>Adicionar tarefa</button>
