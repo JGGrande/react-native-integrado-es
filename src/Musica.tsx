@@ -1,76 +1,72 @@
-import { useState } from "react"
+import { useEffect, useState, type SubmitEvent } from "react"
 import "./Musica.css"
+import type { Music } from "./types/music";
+import { Card } from "./componentes/Card";
+import { Form } from "./componentes/Form";
+import { Header } from "./componentes/Header";
+
 
 export function MusicaPage() {
     const [termo, setTermo] = useState("");
-    const [musicas, setMusicas] = useState([]);
+    const [musicas, setMusicas] = useState<Music[]>([]);
     const [loading, setLoading] = useState(false);
 
-    async function searchOnApi(term) {
+    async function searchOnApi(term: string) {
         const query = new URLSearchParams({
             term: term,
             media: "music",
             entity: "song",
-            limit: 20
+            limit: "20"
         });
 
         setLoading(true);
 
-        const response = await fetch(`https://itunes.apple.com/search?${query}`)
+        try {
+            const response = await fetch(`https://itunes.apple.com/search?${query}`)
 
-        const responseBody = await response.json();
+            if (!response.ok) {
+                throw new Error("Servidor nao respondeu oK");
+            }
 
-        setLoading(false);
+            const responseBody = await response.json();
 
-        setMusicas(responseBody.results ?? []);
+            setMusicas(responseBody.results ?? []);
+        } catch {
+            alert("Falha ao buscar dados na API")
+        } finally {
+            setLoading(false)
+        }
     }
 
-    function onFormSubmit(event) {
+    function onFormSubmit(event: SubmitEvent) {
         event.preventDefault();
         searchOnApi(termo)
     }
 
+    // Quando a página iniciar
+    useEffect(() => {
+        searchOnApi("Green Day")
+    }, [])
+
     return (
         <div className="page-content">
-            {/* Header */}
-            <div className="page-header">
-                <h1>SpotUi</h1>
-            </div>
-            {/* Fim do Header */}
+            <Header />
 
-            <form onSubmit={onFormSubmit} className="search-form">
-                <input
-                    type="search"
-                    placeholder="Busque por artista, album ou musica..."
-                    onChange={(event) => setTermo(event.target.value)}
-                    value={termo}
-                />
-                <button type="submit" className="btn btn-primary">
-                    Buscar
-                </button>
-            </form>
-            {/* Aqui termina o formulario */}
+            <Form 
+                termo={termo}
+                onFormSubmit={onFormSubmit}
+                onInputChange={setTermo}
+            />
 
             {
                 loading
                     ? (
-                        <span class="loader"></span>
+                        <span className="loader"></span>
                     )
                     : (
                         <div className="card-grid">
                             {
-                                musicas.map((musica) => {
-                                    return (
-                                        <div className="card">
-                                            <img
-                                                src={musica.artworkUrl100}
-                                                className="card-photo"
-                                            />
-
-                                            <h3>{musica.trackName}</h3>
-                                        </div>
-                                    )
-                                })
+                                musicas.map((musica) => <Card musica={musica} />)
                             }
                         </div>
                     )
