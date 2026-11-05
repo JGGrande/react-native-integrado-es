@@ -1,4 +1,5 @@
 import type { SubmitEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     termo: string;
@@ -7,6 +8,8 @@ type Props = {
 }
 
 export function Form({ termo, onFormSubmit, onInputChange }: Props) {
+    const navigate = useNavigate();
+
     return (
         <form onSubmit={onFormSubmit} className="search-form">
             <input
@@ -17,6 +20,13 @@ export function Form({ termo, onFormSubmit, onInputChange }: Props) {
             />
             <button type="submit" className="btn btn-primary">
                 Buscar
+            </button>
+            <button  
+                onClick={() => navigate("/musicas/cadastro")}
+                type="button" 
+                className="btn btn-secondary"
+            >
+                Cadastrar
             </button>
         </form>
     )
