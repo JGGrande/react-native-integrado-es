@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api/axios";
 import { Header } from "../componentes/Header";
 import { Bounce, toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type Musica = {
     id: number;
@@ -11,6 +11,7 @@ type Musica = {
 
 export function MusicaListPage() {
     const [musics, setMusics] = useState<Musica[]>([])
+    const navigate = useNavigate();
 
     async function loadMusics() {
         const response = await api.get("/musics");
@@ -40,6 +41,12 @@ export function MusicaListPage() {
     }
 
     useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            navigate("/login")
+            return;
+        }
+
         loadMusics();
     }, [])
     

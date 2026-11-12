@@ -9,6 +9,7 @@ import { NotFoundPage } from './pages/NotFound.tsx'
 import { MusicaListPage } from './pages/MusicaListPage.tsx'
 import { MusicaFormPage } from './pages/MusicaFormPage.tsx'
 import { ToastContainer } from 'react-toastify'
+import { LoginPage } from './pages/LoginPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/musicas/cadastro" element={<MusicaFormPage />} />
           <Route path='/musicas/:id/editar' element={<MusicaFormPage />} />
           <Route path='/app' element={<App />} />
+          <Route path='/login' element={<LoginPage />} />
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
 
